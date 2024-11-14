@@ -1,0 +1,2 @@
+# secrets directory should not be published
+secrets/
