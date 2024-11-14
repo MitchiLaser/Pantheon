@@ -71,7 +71,7 @@ cp ${script_dir}/grub.cfg /srv/pxe/boot/grub/grub.cfg
 # Grub identifies the configuration file by initially searching for one based on the MAC address of
 # the network interface card. If no specific MAC-based file is found, it gradually falls back to a
 # default configuration file.
-# Example: If the test PC has the MAC address '01:38:f7:cd:ca:0d:f8', Grub will search for the files
+# Example: If the test PC has the MAC address '01:38:f7:cd:ca:0d:f8' to which the IP-Address 192.168.0.91 is assigned (in hexadecimal: C0A8025B), Grub will search for the files
 # in the following order:
 # - /boot/grub/grub.cfg-01-38-f7-cd-ca-0d-f8
 # - /boot/grub/grub.cfg-C0A8005C
@@ -85,9 +85,9 @@ cp ${script_dir}/grub.cfg /srv/pxe/boot/grub/grub.cfg
 # - /boot/grub/grub.cfg
 #
 # Therefore, to accommodate other devices, 'grub.cfg' can be customized by creating files named
-# according to the MAC address format or IP address patterns, as shown above. For instance, the
-# current configuration file could be renamed (e.g., 'grub.cfg-C0A8') to match specific criteria,
-# although this approach is untested.
+# according to the IP address patterns (which are statically assigned via the mac address), as shown above.
+# For instance, the current configuration file could be renamed (e.g., 'grub.cfg-C0A8') to match
+# specific criteria, although this approach is untested yet and just a proposal
 #
 # Consideration for future development:
 # Ideally, the preseed file path could be dynamically defined by the mac address, and stored as a variable within grub
