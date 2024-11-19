@@ -1,2 +1,4 @@
-# secrets directory should not be published
-secrets/
+# secrets should not be published
+secrets/id_ed25519
+secrets/id_ed25519.pub
+secrets/password.txt
