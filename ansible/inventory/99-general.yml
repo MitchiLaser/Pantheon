@@ -1,0 +1,5 @@
+# a global group which contains all the computers in the network
+all:
+  children:
+    #mgmt:
+    p12:

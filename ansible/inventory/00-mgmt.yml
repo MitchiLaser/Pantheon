@@ -1,0 +1,4 @@
+# the mgmt machine
+mgmt:
+  hosts:
+    localhost:

@@ -1,0 +1,6 @@
+# install updates for all packages on the system and reboot
+- name: Update all packages
+  ansible.builtin.apt:
+    name: "*"
+    state: latest
+  notify: Reboot if updates were installed

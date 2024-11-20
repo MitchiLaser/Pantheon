@@ -1,0 +1,2 @@
+# This file contains ignores rule violations for ansible-lint
+roles/upgrade/tasks/main.yml package-latest
