@@ -1,0 +1,145 @@
+# install the quartus prime software
+# this is the ansible version of a bash script from the past
+
+---
+- name: Download web installer
+  ansible.builtin.get_url:
+    url: "{{ quartus_installer_url }}"
+    dest: "/tmp/quartus_installer_compressed.run"
+    mode: '0744'
+  register: download
+
+
+- name: Create target dir for extracted installer
+  ansible.builtin.tempfile:
+    state: directory
+    path: /tmp
+    suffix: "_q_install"
+  register: tempdir
+
+
+- name: Start self-extracting installer
+  ansible.builtin.shell:
+    cmd: "/tmp/quartus_installer_compressed.run --quiet --accept --nox11 --chown --noexec --noexec-cleanup --keep --target {{ tempdir.path }}"
+    executable: /bin/bash
+  register: installer1
+  changed_when: installer1.rc != 0
+
+
+- name: Remove temporary installer file
+  ansible.builtin.file:
+    path: "/tmp/quartus_installer_compressed.run"
+    state: absent
+
+
+- name: In case installation target directory from previous run exists, remove it
+  ansible.builtin.file:
+    path: "{{ quartus_target_dir }}"
+    state: absent
+
+
+# make sure this target directory is made for the admin user
+# on the target machines
+- name: Create empty target directory
+  ansible.builtin.file:
+    path: "{{ quartus_target_dir }}"
+    state: directory
+    mode: 'u=rwx,g=rx,o=rx'
+    owner: "{{ quartus_admin_user }}"
+    group: "{{ quartus_admin_user }}"
+  register: target
+
+
+# before starting the installer: it needs another temoporary directory
+# as a temporary location for the downloaded files
+- name: Create temporary download directory for installer
+  ansible.builtin.tempfile:
+    state: directory
+    path: /tmp
+    suffix: "_q_download"
+  register: tempdownload
+
+
+# change permission so that the installer can be run by another user than root!
+# For reasons I don't wanna explain in detail here, I don't want the installer to be run by root
+# Also, I don't trust this installer at all. Screw this shit and never give it root permissions!
+- name: Change owner of installer
+  ansible.builtin.file:
+    path: "{{ tempdir.path }}"
+    state: directory
+    mode: 'u=rwx,g=rx,o=rx'
+    owner: "{{ quartus_admin_user }}"
+    group: "{{ quartus_admin_user }}"
+    recurse: true  # change permission of everything!
+
+
+- name: Change owner of temporary download location
+  ansible.builtin.file:
+    path: "{{ tempdownload.path }}"
+    state: directory
+    mode: 'u=rwx,g=rx,o=rx'
+    owner: "{{ quartus_admin_user }}"
+    group: "{{ quartus_admin_user }}"
+    recurse: true  # change permission of everything!
+
+
+# now start the installer as the specified user
+- name: Call Quartus installer after preparation
+  ansible.builtin.shell:
+    cmd: "{{ tempdir.path }}/qinst.sh --cli --accept-eula --download-dir {{ tempdownload.path }} --install-dir {{ target.path }} --auto-install --parallel-downloads 4 --components quartus,max"
+    executable: /bin/bash
+  become: true
+  become_user: "{{ quartus_admin_user }}"
+  register: installer2
+  changed_when: installer2.rc != 0
+
+
+- name: Remove temporary download dir from installer
+  ansible.builtin.file:
+    path: "{{ tempdownload.path }}"
+    state: absent
+  when: tempdownload.path is defined
+
+# TODO: The statement above and below can be combine with a single loop
+
+- name: Remove installer from temp dir
+  ansible.builtin.file:
+    path: "{{ tempdir.path }}"
+    state: absent
+  when: tempdir.path is defined
+
+
+- name: Create desktop file for Quartus Prime
+  ansible.builtin.copy:
+    src: quartus.desktop
+    dest: /usr/share/applications/quartus.desktop
+    owner: root
+    group: root
+    mode: '0644'
+
+
+- name: Create udev rule for USB Blaster
+  ansible.builtin.copy:
+    src: 51-usbblaster.rules
+    dest: /etc/udev/rules.d/51-usbblaster.rules
+    owner: root
+    group: root
+    mode: '0644'
+
+
+# for the quartus software there was a patch developed
+# to enable european circuit symbols in the schematic editor
+# this patch is originally sourced from the MAXwel repository (lab_cource/quartus_eu_patch)
+# and all the files for the patch were copied to this role
+# Instead of using the install script the whole process is replicated in this role
+- name: Install Quartus EU patch
+  ansible.builtin.unarchive:
+    src: eu_symbols.tar.gz
+    dest: "{{ quartus_eu_patch }}"
+    owner: "{{ quartus_admin_user }}"
+    group: "{{ quartus_admin_user }}"
+    mode: '0755'
+
+
+- name: Reboot to apply udev rule
+  ansible.builtin.reboot:

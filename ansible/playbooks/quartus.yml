@@ -1,0 +1,5 @@
+---
+- name: Install quartus
+  hosts: p12
+  roles:
+    - quartus

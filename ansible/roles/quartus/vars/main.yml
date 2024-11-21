@@ -1,0 +1,8 @@
+# the url for the quartus web installer
+quartus_installer_url: "https://downloads.intel.com/akdlm/software/acdsinst/23.1std.1/993/qinst/qinst-lite-linux-23.1std.1-993.run"
+# installation target directory
+quartus_target_dir: "/opt/intelFPGA"
+# username of the admin account on the target machine
+quartus_admin_user: "praktikum"
+# where to install the files from the quartus eu patch (originally from MAXwel repository)
+quartus_eu_patch: "/opt/intelFPGA/quartus/libraries/primitives/"
