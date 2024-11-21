@@ -1,0 +1,4 @@
+---
+- name: Reboot if packages were installed
+  ansible.builtin.reboot:
+  when: "'mgmt' not in group_names"  # Skip if host is in the "mgmt" group

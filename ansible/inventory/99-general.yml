@@ -1,5 +1,7 @@
 # a global group which contains all the computers in the network
-all:
+# unfortunately this group cannot be named "all" because ansible collects all devices under
+# a group with the same name. This would automatically add 'mgmt' which should not be in the group!
+clients:
   children:
-    #mgmt:
+    # mgmt:  # removed because it is a special one that should not receive updated by accident
     p12:

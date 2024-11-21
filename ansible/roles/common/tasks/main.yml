@@ -1,0 +1,24 @@
+# install some common packages which shouldn't be missing
+# this includes a text editor, git, wget, curl, etc.
+# The list can be extended as needed
+# pay attention that the packages in this list should be available for linuxmint and debian
+- name: Install basic foundation
+  ansible.builtin.apt:
+    state: present
+    update_cache: true
+    name:
+      - vim  # never install emacs!
+      - git
+      - htop
+      - curl
+      - wget
+      - tmux
+  notify: Reboot if packages were installed
+
+# afterwards install aditional packages only for the mgmt group
+- name: Install additional packages for mgmt group
+  ansible.builtin.apt:
+    state: present
+    name:
+      - nmap
+  when: "'mgmt' in group_names"
