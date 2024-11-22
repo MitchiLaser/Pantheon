@@ -16,7 +16,7 @@
   ansible.builtin.lineinfile:
     path: /etc/exports
     regexp: '^/srv/nfs'
-    line: /srv/nfs *(rw,sync,no_subtree_check)
+    line: /srv/nfs *(rw,sync,no_subtree_check,all_squash,anonuid=65534,anongid=65534)
     owner: root
     group: root
     mode: "0644"

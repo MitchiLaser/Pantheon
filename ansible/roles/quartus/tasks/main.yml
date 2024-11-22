@@ -1,5 +1,11 @@
 # install the quartus prime software
 # this is the ansible version of a bash script from the past
+#
+# this role is complicated and has some quirks. Quartus was never made to be installed
+# from a script and therefore the installation process is a bit tricky
+# Instead it would be easier to just install the software manually on the NFS mount and then
+# copy it to / mount it on the target machines but i decided that cloud-edge is outdated.
+# Instead we do true-edge: we inject the software directly into the clients linux distribution!
 
 ---
 - name: Download web installer
@@ -141,5 +147,8 @@
     mode: '0755'
 
 
+# if you find a way to inform udev about the new rule without rebooting the machine:
+#   1. update this role
+#   2. Contact me and tell me how you did it. In case I'm already dead, tell my children.
 - name: Reboot to apply udev rule
   ansible.builtin.reboot:

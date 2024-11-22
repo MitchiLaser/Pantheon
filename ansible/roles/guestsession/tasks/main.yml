@@ -26,3 +26,14 @@
     owner: root
     group: root
     mode: '0644'
+
+
+- name: Add NFS share access rules to AppArmor profile
+  ansible.builtin.blockinfile:
+    path: /etc/apparmor.d/lightdm-guest-session
+    insertbefore: '^}$'  # Find the closing brace
+    block: |
+      # allow access to the common nfs share
+      /media/nfs/ r,
+      /media/nfs/** rw,
+  notify: Reload AppArmor profile

@@ -1,3 +1,10 @@
 ---
 - name: Reboot
   ansible.builtin.reboot:
+
+
+- name: Reload AppArmor profile
+  ansible.builtin.command:
+    cmd: apparmor_parser -r /etc/apparmor.d/lightdm-guest-session
+  register: aa_cmd
+  changed_when: aa_cmd.rc == 0

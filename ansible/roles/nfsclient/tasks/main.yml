@@ -24,6 +24,15 @@
     path: /etc/fstab
     regexp: '^192\.168\.0\.10:/srv/nfs'
     line: "192.168.0.10:/srv/nfs /media/nfs nfs defaults,noatime,_netdev,x-systemd.automount 0 0"
+    # Explanation:
+    #   - 192.168.0.10:/srv/nfs: the NFS server and the share that should be mounted
+    #   - /media/nfs: the mount point on the client
+    #   - nfs: the filesystem type
+    #   - defaults: mount options
+    #   - noatime: do not update the access time of the files (performance improvement)
+    #   - _netdev: wait for the network to be available
+    #   - x-systemd.automount: use systemd to mount the share
+    #   - 0 0: dump and pass values
     state: present
 
 - name: Reload systemd
