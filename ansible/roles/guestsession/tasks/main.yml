@@ -1,0 +1,28 @@
+# activate the guest session for the lightdm greeter
+- name: Copy config file
+  ansible.builtin.copy:
+    src: 40-enable-guest.conf
+    dest: /etc/lightdm/lightdm.conf.d/40-enable-guest.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Reboot
+
+
+# this task also creates the directory for the norun.flag file for the next task
+- name: Create skel for guest account
+  ansible.builtin.file:
+    state: directory
+    path: /etc/guest-session/skel/.linuxmint/mintwelcome
+    owner: root
+    group: root
+    mode: '0755'
+
+
+- name: Disable linuxmint welcome screen
+  ansible.builtin.file:
+    state: touch
+    path: /etc/guest-session/skel/.linuxmint/mintwelcome/norun.flag
+    owner: root
+    group: root
+    mode: '0644'
