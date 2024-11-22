@@ -1,0 +1,35 @@
+# set up the NFS server on the mgmt machine
+---
+- name: Install NFS server packages
+  ansible.builtin.apt:
+    name: nfs-kernel-server
+    state: present
+    update_cache: true
+
+- name: Create the NFS export directory
+  ansible.builtin.file:
+    path: /srv/nfs
+    state: directory
+    mode: "0777"
+
+- name: Configure NFS exports
+  ansible.builtin.lineinfile:
+    path: /etc/exports
+    regexp: '^/srv/nfs'
+    line: /srv/nfs *(rw,sync,no_subtree_check)
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Apply NFS exports configuration
+  ansible.builtin.shell:
+    cmd: exportfs -a
+    executable: /bin/bash
+  register: reload_exports
+  changed_when: reload_exports.rc != 0
+
+- name: Start and enable NFS server service
+  ansible.builtin.service:
+    name: nfs-kernel-server
+    state: restarted
+    enabled: true

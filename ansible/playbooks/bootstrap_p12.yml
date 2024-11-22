@@ -1,7 +1,14 @@
 # bootstrap process to set up a new machine
 # for the p12 group
 ---
-- import_playbook: common.yml
-- import_playbook: guestsession.yml
-- import_playbook: quartus.yml
+- name: Bootstrap the P1 / P2 machines
+  hosts: p12
 
+- name: Run common playbook
+  ansible.builtin.import_playbook: common.yml
+
+- name: Run playbook to set up the guest session
+  ansible.builtin.import_playbook: guestsession.yml
+
+- name: Run playbook for Quartus
+  ansible.builtin.import_playbook: quartus.yml

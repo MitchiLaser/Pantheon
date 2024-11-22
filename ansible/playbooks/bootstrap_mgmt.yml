@@ -1,0 +1,10 @@
+# bootstrap process to set up the mgmt machine
+---
+- name: Bootstrap the mgmt machine
+  hosts: mgmt
+
+- name: Run common playbook
+  ansible.builtin.import_playbook: common.yml
+
+- name: Run playbook for NFS server
+  ansible.builtin.import_playbook: nfssrv.yml
