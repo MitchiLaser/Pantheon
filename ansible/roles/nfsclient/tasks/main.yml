@@ -1,0 +1,31 @@
+# change /etc/fstab so that the NFS share is mounted on /mnt/nfs
+---
+- name: Install NFS server packages
+  ansible.builtin.apt:
+    name: nfs-common
+    state: present
+    update_cache: true
+
+- name: Check if the mount directory exists
+  ansible.builtin.stat:
+    path: /media/nfs
+  register: dir_stat
+# this check is important because the directory can only be created when
+# there is nothing mounted at the moment!
+- name: Create mount point for the NFS share
+  ansible.builtin.file:
+    path: /media/nfs
+    state: directory
+    mode: "0755"
+  when: not dir_stat.stat.exists
+
+- name: Add NFS server to /etc/fstab
+  ansible.builtin.lineinfile:
+    path: /etc/fstab
+    regexp: '^192\.168\.0\.10:/srv/nfs'
+    line: "192.168.0.10:/srv/nfs /media/nfs nfs defaults,noatime,_netdev,x-systemd.automount 0 0"
+    state: present
+
+- name: Reload systemd
+  ansible.builtin.systemd_service:
+    daemon-reload: true

@@ -1,0 +1,5 @@
+---
+- name: Enable guest session
+  hosts: p12
+  roles:
+    - nfsclient

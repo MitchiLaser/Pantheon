@@ -10,5 +10,8 @@
 - name: Run playbook to set up the guest session
   ansible.builtin.import_playbook: guestsession.yml
 
+- name: Configure NFS mount
+  ansible.builtin.import_playbook: nfsclient.yml
+
 - name: Run playbook for Quartus
   ansible.builtin.import_playbook: quartus.yml
