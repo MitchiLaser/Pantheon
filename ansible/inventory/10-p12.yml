@@ -1,6 +1,6 @@
 # the computers used in the P1 and P2 lab course
 p12:
   hosts:
-    192.168.0.91:
+    192.168.0.20:
       # this is just an example host!
       # replace with the right ones
