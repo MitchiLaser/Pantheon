@@ -22,3 +22,16 @@
     name:
       - nmap
   when: "'mgmt' in group_names"
+
+- name: Add a list of aliases into the .bashrc file of the mgmt machine
+  ansible.builtin.blockinfile:
+    path: /root/.bashrc
+    append_newline: true
+    prepend_newline: true
+    block: |
+      # Aliases
+      alias ls="ls -F --color=auto"
+      alias la="ls -a"
+      alias ll="ls -laFh"
+      alias grep="grep --color=auto"
+  when: "'mgmt' in group_names"

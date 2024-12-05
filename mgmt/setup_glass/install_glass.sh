@@ -60,3 +60,14 @@ EOF
 systemctl daemon-reload
 systemctl enable glass
 systemctl start glass
+
+# extend apparmor configuration for isc dhcp server to access
+# files created by glass during runtime
+if ! grep -q '# glass' /etc/apparmor.d/usr.sbin.dhcpd; then
+	# add glass rectory to apparmor profile as readable
+	sed -i '/^}/i\
+  # glass gui\n  /opt/glass-isc-dhcp/* r,' /etc/apparmor.d/usr.sbin.dhcpd
+
+	# restart apparmor
+	systemctl restart apparmor
+fi
