@@ -1,0 +1,35 @@
+# set up the NFS server on the mgmt machine
+---
+- name: Install Apache2 package
+  ansible.builtin.apt:
+    name: apache2
+    state: present
+    update_cache: true
+
+- name: Copy config file to destination location
+  ansible.builtin.copy:
+    dest: /etc/apache2/sites-available/nfs.conf
+    src: nfs.conf
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Disable default configuration
+  ansible.builtin.shell:
+    cmd: a2dissite 000-default.conf
+    executable: /bin/bash
+  register: a2en
+  changed_when: a2en.rc != 0
+
+- name: Enable site nfs.conf
+  ansible.builtin.shell:
+    cmd: a2ensite nfs.conf
+    executable: /bin/bash
+  register: a2en
+  changed_when: a2en.rc != 0
+
+- name: restart apache2
+  ansible.builtin.service:
+    name: apache2
+    state: restarted
+    enabled: true

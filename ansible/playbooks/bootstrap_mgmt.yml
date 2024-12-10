@@ -8,3 +8,6 @@
 
 - name: Run playbook for NFS server
   ansible.builtin.import_playbook: nfssrv.yml
+
+- name: Run playbook to enable apache2
+  ansible.builtin.import_playbook: apache2.yml
