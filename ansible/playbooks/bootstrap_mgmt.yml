@@ -10,4 +10,4 @@
   ansible.builtin.import_playbook: nfssrv.yml
 
 - name: Run playbook to enable apache2
-  ansible.builtin.import_playbook: apache2.yml
+  ansible.builtin.import_playbook: apache.yml
