@@ -1,10 +1,8 @@
 # Pantheon
 
 In ancient times, a pantheon was a sanctuary dedicated to all the gods. Nowadays this is a setup to provide a uniform way to manage a large herd of computers in a university network.
-
-## Wait, What?
-
-The Physics faculty at the University of Karlsruhe (nowadays KIT) introduces a large number of computers in their lab course, thus replacing the old windows machines with a new setup. With this step a paradigm shift is introduced: Linux is the new standard and a centralised management system is needed to keep the machines up to date and to provide a uniform environment for the students. With the intention to reduce the maintenance workload and to provide a more stable environment, the Pantheon project was born.
+**Wait, What?**
+The Physics faculty at KIT introduced a large number of computers in their lab course, thus replacing the old windows machines with a new setup. With this step a paradigm shift is introduced: Linux is the new standard operating system and a centralised management system is needed to keep the machines up to date and to provide a uniform environment for the students. With the intention to reduce the maintenance workload and to provide a more stable environment, the Pantheon project was born.
 
 ## What is it for?
 
@@ -25,6 +23,10 @@ Haha, you thought I documented it? Well, I didn't because I don't get paid enoug
 - The Ansible setup is a bit more complex. The machines are grouped by their role (e.g. lab machine, server, etc.) and the setup is split into multiple playbooks. There should be playbooks and roles for every task that needs to be done. The playbooks are run by the management machine and the configuration is stored in a git repository. The git repository is cloned to the management machine and the playbooks are run from there. It is important to keep this repository up to date to ensure that the machines can be updated and configured properly.
 - The central server is a simple setup using NFS. The server provides a shared folder for the lab experiments and a shared folder for the user data with the later one being accessible from home via a HTTP(s) connection. The server only operates within the university network and is not accessible from the outside but a VPN connection is possible.
 
-# So, why is this published on GitHub?
+## What can I find in the directories of this repository?
 
-Because there are other interests in this project. You don't have to reinvent the wheel in case you are looking for something similar. Furthermore it is intended to be adapted by other lab course setups in our neighbouring faculties.
+- `mgmt`: Within this directory the setup and configuration process of the management server (`mgmt`) is automated. It contains a collection of shell scripts to set up the management server from scratch and also a preseed configuration file to install the operating system. All the necessary documentation for this should be available in this directory.
+- `ansible`: This directory contains the Ansible playbooks and roles to configure the machines in the network. Most of the maintenance work should be done within this directory to keep the environments up to date.
+- `sh-scripts`: before the transition to ansible some of the old shell scripts are kept there as a reference for documentation purposes. They are not used anymore and should be removed in the future.
+- `Roadmap`: A presentation - not useful anymore
+- `secrets`: This directory is a submodule and it should never be pushed to this repository. It contains the private ssh key and a password file to access the machines in the network.

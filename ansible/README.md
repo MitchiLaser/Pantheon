@@ -2,7 +2,7 @@
 
 This directory contains the files for ansible to operate on all the PCs and all information to deploy the machines.
 
-## Boot procedure
+## Boot procedure (clients)
 
 The mgmt hosts a PXE server. The boot menu can be entered by smashing the F7 key. From there on, Linux mint should radically install itself onto the machines without asking for permission.
 
